@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🦖 Kieranosaures Rex - Het Goedmaak Rad</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Russo+One&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 50%, #1a472a 100%);
+            font-family: 'Russo One', sans-serif;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Jungle achtergrond elementen */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M20,100 Q25,60 20,30 Q30,40 25,20 Q35,35 30,10' stroke='%23143d21' stroke-width='3' fill='none'/%3E%3C/svg%3E"),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M80,100 Q75,60 80,30 Q70,40 75,20 Q65,35 70,10' stroke='%23143d21' stroke-width='3' fill='none'/%3E%3C/svg%3E");
+            background-position: left bottom, right bottom;
+            background-repeat: no-repeat;
+            background-size: 150px 300px;
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            font-family: 'Permanent Marker', cursive;
+            font-size: 3.5em;
+            color: #ff6b35;
+            text-shadow:
+                4px 4px 0 #8b4513,
+                6px 6px 0 rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+            animation: roar 2s ease-in-out infinite;
+        }
+
+        @keyframes roar {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            color: #90EE90;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .dino-emoji {
+            font-size: 4em;
+            animation: stomp 1s ease-in-out infinite;
+            display: inline-block;
+        }
+
+        @keyframes stomp {
+            0%, 100% { transform: translateY(0) rotate(-5deg); }
+            50% { transform: translateY(-10px) rotate(5deg); }
+        }
+
+        .story-box {
+            background: rgba(139, 69, 19, 0.8);
+            border: 4px solid #654321;
+            border-radius: 20px;
+            padding: 20px;
+            margin: 20px 0;
+            color: #f5deb3;
+            font-size: 1.1em;
+            line-height: 1.6;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        .wheel-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            margin: 40px auto;
+        }
+
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            position: relative;
+            transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+            box-shadow:
+                0 0 0 15px #8b4513,
+                0 0 0 18px #654321,
+                0 0 40px rgba(0,0,0,0.5);
+        }
+
+        .wheel-segment {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            top: 0;
+            right: 0;
+            transform-origin: bottom left;
+            overflow: hidden;
+            border: 2px solid rgba(0,0,0,0.3);
+        }
+
+        .wheel-segment-content {
+            position: absolute;
+            left: -100%;
+            width: 200%;
+            height: 200%;
+            background: var(--segment-color);
+            transform: rotate(22.5deg) skewY(-45deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .wheel-segment span {
+            position: absolute;
+            font-size: 11px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 1px 1px 2px black;
+            width: 80px;
+            text-align: center;
+            transform: rotate(67.5deg);
+            top: 45px;
+            left: 5px;
+        }
+
+        .pointer {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 25px solid transparent;
+            border-right: 25px solid transparent;
+            border-top: 50px solid #ff6b35;
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.5));
+            z-index: 10;
+        }
+
+        .pointer::after {
+            content: '🦖';
+            position: absolute;
+            font-size: 30px;
+            top: -70px;
+            left: -15px;
+        }
+
+        .center-circle {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, #ff6b35, #8b4513);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 5;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5em;
+        }
+
+        .spin-button {
+            background: linear-gradient(180deg, #ff6b35 0%, #d35400 100%);
+            border: 4px solid #8b4513;
+            color: white;
+            font-family: 'Permanent Marker', cursive;
+            font-size: 2em;
+            padding: 20px 50px;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 30px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .spin-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+            background: linear-gradient(180deg, #ff8c5a 0%, #e67e22 100%);
+        }
+
+        .spin-button:active {
+            transform: translateY(2px);
+        }
+
+        .spin-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result-box {
+            background: linear-gradient(135deg, #654321 0%, #8b4513 100%);
+            border: 5px solid #ff6b35;
+            border-radius: 25px;
+            padding: 30px;
+            margin: 30px 0;
+            display: none;
+            animation: resultAppear 0.5s ease-out;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+        }
+
+        @keyframes resultAppear {
+            0% { transform: scale(0.5); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .result-box h2 {
+            color: #ff6b35;
+            font-family: 'Permanent Marker', cursive;
+            font-size: 2em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .result-box p {
+            color: #f5deb3;
+            font-size: 1.4em;
+            line-height: 1.5;
+        }
+
+        .result-emoji {
+            font-size: 4em;
+            margin: 15px 0;
+            animation: bounce 0.5s ease infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .footer-dinos {
+            margin-top: 40px;
+            font-size: 3em;
+            opacity: 0.8;
+        }
+
+        .footer-dinos span {
+            display: inline-block;
+            animation: walk 2s ease-in-out infinite;
+        }
+
+        .footer-dinos span:nth-child(2) { animation-delay: 0.2s; }
+        .footer-dinos span:nth-child(3) { animation-delay: 0.4s; }
+        .footer-dinos span:nth-child(4) { animation-delay: 0.6s; }
+        .footer-dinos span:nth-child(5) { animation-delay: 0.8s; }
+
+        @keyframes walk {
+            0%, 100% { transform: translateX(0) scaleX(1); }
+            25% { transform: translateX(10px) scaleX(1); }
+            50% { transform: translateX(0) scaleX(-1); }
+            75% { transform: translateX(-10px) scaleX(-1); }
+        }
+
+        .roar-text {
+            position: fixed;
+            font-family: 'Permanent Marker', cursive;
+            font-size: 5em;
+            color: #ff6b35;
+            text-shadow: 3px 3px 0 #8b4513;
+            pointer-events: none;
+            animation: roarFloat 1s forwards;
+            z-index: 100;
+        }
+
+        @keyframes roarFloat {
+            0% { opacity: 1; transform: scale(0.5) rotate(-10deg); }
+            50% { opacity: 1; transform: scale(1.2) rotate(5deg); }
+            100% { opacity: 0; transform: scale(1.5) translateY(-50px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="dino-emoji">🦖</div>
+        <h1>KIERANOSAURES REX</h1>
+        <p class="subtitle">Het Legendarische Goedmaak-Rad der Vriendschap</p>
+
+        <div class="story-box">
+            <p>
+                <strong>⚡ DE LEGENDE ⚡</strong><br><br>
+                In het oerwoud van de vriendschap leefde een machtige held genaamd <strong>KIERANOSAURES REX</strong>.
+                Deze nobele dinosaurus zwoegde uren aan een laptop reparatie, alleen om te ontdekken dat er waarschijnlijk
+                helemaal niks aan de hand was! 🦖💻<br><br>
+                <em>Het Rad van Verzoening moet nu bepalen hoe deze daad der vriendschap vergoed wordt...</em>
+            </p>
+        </div>
+
+        <div class="wheel-container">
+            <div class="pointer"></div>
+            <canvas id="wheel" width="400" height="400"></canvas>
+            <div class="center-circle">🦴</div>
+        </div>
+
+        <button class="spin-button" id="spinBtn" onclick="spinWheel()">
+            🦖 DRAAI HET RAD! 🦖
+        </button>
+
+        <div class="result-box" id="resultBox">
+            <div class="result-emoji" id="resultEmoji"></div>
+            <h2 id="resultTitle">UITSLAG!</h2>
+            <p id="resultText"></p>
+        </div>
+
+        <div class="footer-dinos">
+            <span>🦕</span>
+            <span>🦖</span>
+            <span>🦴</span>
+            <span>🦖</span>
+            <span>🦕</span>
+        </div>
+    </div>
+
+    <script>
+        const options = [
+            {
+                text: "Biertjes!",
+                color: "#e74c3c",
+                emoji: "🍺",
+                title: "BIER TIJD!",
+                description: "Je bent Kieran een avond ONBEPERKT bier verschuldigd. Elke keer als zijn glas leeg is, staat er een nieuwe klaar. Tot hij zegt dat het genoeg is (wat waarschijnlijk nooit gebeurt)."
+            },
+            {
+                text: "Naakte Ronde",
+                color: "#9b59b6",
+                emoji: "🍑",
+                title: "STREAKEN!",
+                description: "Je moet één volledige ronde door de woonkamer/tuin rennen in je Adamskostuum terwijl je roept: 'KIERANOSAURES IS DE BAAS!' Fotobewijs vereist (gecensureerd mag)."
+            },
+            {
+                text: "Massage",
+                color: "#3498db",
+                emoji: "💆",
+                title: "MASSAGE SERVICE!",
+                description: "Kieran krijgt een 30 minuten durende professionele voetmassage van jou, inclusief warme handdoeken en ontspannende muziek. Geen geklaag toegestaan."
+            },
+            {
+                text: "Shotjes!",
+                color: "#e67e22",
+                emoji: "🥃",
+                title: "SHOTJES ROULETTE!",
+                description: "5 mystery shots voor Kieran's keuze - jij betaalt EN je moet er minstens 2 meedrinken. Kieran kiest de smaken (en ja, Sambuca mag erbij)."
+            },
+            {
+                text: "Dino Dans",
+                color: "#1abc9c",
+                emoji: "💃",
+                title: "T-REX DANS!",
+                description: "Je moet 3 minuten lang de T-Rex dansen (korte armpjes!) op het drukste moment in een café/kroeg terwijl je dinosaurus geluiden maakt. Video bewijs vereist!"
+            },
+            {
+                text: "BBQ Chef",
+                color: "#f39c12",
+                emoji: "🥩",
+                title: "CARNIVOOR FEEST!",
+                description: "Jij organiseert een complete BBQ voor Kieran met minimaal 3 soorten vlees (want dino's zijn carnivoren). Jij draait, marineert, en serveert. Kieran doet NIKS."
+            },
+            {
+                text: "Wildplassen",
+                color: "#2ecc71",
+                emoji: "🌳",
+                title: "TERRITORIUM MARKEREN!",
+                description: "Net als dinosaurussen moet jij je territorium markeren. Eén keer wildplassen op een door Kieran gekozen locatie (binnen de wet blijven natuurlijk). Kieran houdt de wacht."
+            },
+            {
+                text: "Slaaf 24u",
+                color: "#34495e",
+                emoji: "👑",
+                title: "KIERAN IS KONING!",
+                description: "24 uur lang ben je Kieran's persoonlijke butler. Drankjes halen, snacks serveren, Netflix keuzes - alles wat de koning beveelt (binnen redelijke grenzen)."
+            },
+            {
+                text: "Karaoke",
+                color: "#e91e63",
+                emoji: "🎤",
+                title: "JURASSIC KARAOKE!",
+                description: "Je moet 'I Will Always Love You' van Whitney Houston zingen in een karaoke bar, opgedragen aan Kieranosaures Rex. Inclusief knielen en dramatische gebaren."
+            },
+            {
+                text: "Gaming",
+                color: "#00bcd4",
+                emoji: "🎮",
+                title: "GAMING MARATHON!",
+                description: "Een volledige gaming avond waar Kieran ALLE games kiest. Jij zorgt voor snacks, drankjes en mag niet klagen over welk spel dan ook. Rage-quitten = strafshot."
+            },
+            {
+                text: "Ontbijt Bed",
+                color: "#ff5722",
+                emoji: "🍳",
+                title: "LUXE ONTBIJT!",
+                description: "Kieran krijgt een uitgebreid ontbijt op bed, compleet met verse jus d'orange, eieren naar keuze, croissants en koffie. Serveren in een dinosaurus schort!"
+            },
+            {
+                text: "Complimenten",
+                color: "#795548",
+                emoji: "😍",
+                title: "EGO BOOST!",
+                description: "Je moet 1 week lang elke dag minimaal 3 complimenten naar Kieran sturen. Creatieve complimenten! 'Je bent de coolste dino sinds de Krijttijd' niveau."
+            }
+        ];
+
+        const canvas = document.getElementById('wheel');
+        const ctx = canvas.getContext('2d');
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const radius = 190;
+
+        let currentRotation = 0;
+        let isSpinning = false;
+
+        function drawWheel() {
+            const segmentAngle = (2 * Math.PI) / options.length;
+
+            options.forEach((option, index) => {
+                const startAngle = index * segmentAngle + currentRotation;
+                const endAngle = startAngle + segmentAngle;
+
+                // Draw segment
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+                ctx.closePath();
+                ctx.fillStyle = option.color;
+                ctx.fill();
+                ctx.strokeStyle = '#2c1810';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // Draw text
+                ctx.save();
+                ctx.translate(centerX, centerY);
+                ctx.rotate(startAngle + segmentAngle / 2);
+                ctx.textAlign = 'right';
+                ctx.fillStyle = 'white';
+                ctx.font = 'bold 14px Russo One';
+                ctx.shadowColor = 'black';
+                ctx.shadowBlur = 3;
+                ctx.fillText(option.text, radius - 20, 5);
+                ctx.restore();
+            });
+
+            // Draw outer ring
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+            ctx.strokeStyle = '#8b4513';
+            ctx.lineWidth = 15;
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius + 7, 0, 2 * Math.PI);
+            ctx.strokeStyle = '#654321';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+        }
+
+        function spinWheel() {
+            if (isSpinning) return;
+
+            isSpinning = true;
+            document.getElementById('spinBtn').disabled = true;
+            document.getElementById('resultBox').style.display = 'none';
+
+            // Create roar effect
+            createRoar();
+
+            const spinAmount = Math.random() * 360 + 1440; // At least 4 full rotations
+            const targetRotation = currentRotation + (spinAmount * Math.PI / 180);
+            const duration = 5000;
+            const startTime = performance.now();
+            const startRotation = currentRotation;
+
+            function animate(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+
+                // Easing function for realistic slowdown
+                const easeOut = 1 - Math.pow(1 - progress, 4);
+
+                currentRotation = startRotation + (targetRotation - startRotation) * easeOut;
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                drawWheel();
+
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                } else {
+                    isSpinning = false;
+                    document.getElementById('spinBtn').disabled = false;
+                    showResult();
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        function showResult() {
+            const segmentAngle = 360 / options.length;
+            // Pointer is at top (270 degrees or -90 degrees)
+            const normalizedRotation = ((currentRotation * 180 / Math.PI) % 360 + 360) % 360;
+            const pointerAngle = (270 - normalizedRotation + 360) % 360;
+            const selectedIndex = Math.floor(pointerAngle / segmentAngle);
+
+            const result = options[selectedIndex];
+
+            document.getElementById('resultEmoji').textContent = result.emoji;
+            document.getElementById('resultTitle').textContent = result.title;
+            document.getElementById('resultText').textContent = result.description;
+            document.getElementById('resultBox').style.display = 'block';
+
+            // Create celebration roars
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => createRoar(), i * 300);
+            }
+        }
+
+        function createRoar() {
+            const roar = document.createElement('div');
+            roar.className = 'roar-text';
+            roar.textContent = 'ROAR!';
+            roar.style.left = Math.random() * (window.innerWidth - 200) + 'px';
+            roar.style.top = Math.random() * (window.innerHeight - 200) + 'px';
+            document.body.appendChild(roar);
+
+            setTimeout(() => roar.remove(), 1000);
+        }
+
+        // Initial draw
+        drawWheel();
+    </script>
+</body>
+</html>
