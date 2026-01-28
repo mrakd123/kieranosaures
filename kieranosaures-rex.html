@@ -94,8 +94,8 @@
 
         .wheel-container {
             position: relative;
-            width: 400px;
-            height: 400px;
+            width: 500px;
+            height: 500px;
             margin: 40px auto;
         }
 
@@ -171,8 +171,8 @@
 
         .center-circle {
             position: absolute;
-            width: 80px;
-            height: 80px;
+            width: 90px;
+            height: 90px;
             background: radial-gradient(circle, #ff6b35, #8b4513);
             border-radius: 50%;
             top: 50%;
@@ -183,7 +183,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.5em;
+            font-size: 3em;
         }
 
         .spin-button {
@@ -259,6 +259,39 @@
             50% { transform: translateY(-15px); }
         }
 
+        .legend {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            font-size: 0.95em;
+            color: #f5deb3;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            flex-shrink: 0;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .legend-emoji {
+            font-size: 1.3em;
+        }
+
         .footer-dinos {
             margin-top: 40px;
             font-size: 3em;
@@ -298,6 +331,26 @@
             50% { opacity: 1; transform: scale(1.2) rotate(5deg); }
             100% { opacity: 0; transform: scale(1.5) translateY(-50px); }
         }
+
+        @media (max-width: 600px) {
+            .wheel-container {
+                width: 350px;
+                height: 350px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .legend {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .legend-item {
+                font-size: 0.85em;
+                padding: 6px 8px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -318,7 +371,7 @@
 
         <div class="wheel-container">
             <div class="pointer"></div>
-            <canvas id="wheel" width="400" height="400"></canvas>
+            <canvas id="wheel" width="500" height="500"></canvas>
             <div class="center-circle">🦴</div>
         </div>
 
@@ -331,6 +384,8 @@
             <h2 id="resultTitle">UITSLAG!</h2>
             <p id="resultText"></p>
         </div>
+
+        <div class="legend" id="legend"></div>
 
         <div class="footer-dinos">
             <span>🦕</span>
@@ -433,7 +488,7 @@
         const ctx = canvas.getContext('2d');
         const centerX = canvas.width / 2;
         const centerY = canvas.height / 2;
-        const radius = 190;
+        const radius = 240;
 
         let currentRotation = 0;
         let isSpinning = false;
@@ -452,20 +507,37 @@
                 ctx.closePath();
                 ctx.fillStyle = option.color;
                 ctx.fill();
-                ctx.strokeStyle = '#2c1810';
-                ctx.lineWidth = 2;
+                ctx.strokeStyle = '#1a1a1a';
+                ctx.lineWidth = 3;
                 ctx.stroke();
 
-                // Draw text
+                // Draw emoji
+                ctx.save();
+                ctx.translate(centerX, centerY);
+                ctx.rotate(startAngle + segmentAngle / 2);
+                ctx.font = '28px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(option.emoji, radius - 45, 0);
+                ctx.restore();
+
+                // Draw text with strong outline for readability
                 ctx.save();
                 ctx.translate(centerX, centerY);
                 ctx.rotate(startAngle + segmentAngle / 2);
                 ctx.textAlign = 'right';
-                ctx.fillStyle = 'white';
-                ctx.font = 'bold 14px Russo One';
-                ctx.shadowColor = 'black';
-                ctx.shadowBlur = 3;
-                ctx.fillText(option.text, radius - 20, 5);
+                ctx.textBaseline = 'middle';
+                ctx.font = 'bold 16px Arial, sans-serif';
+
+                // Draw black outline (multiple strokes for thickness)
+                ctx.strokeStyle = '#000000';
+                ctx.lineWidth = 4;
+                ctx.lineJoin = 'round';
+                ctx.strokeText(option.text, radius - 70, 0);
+
+                // Draw white fill
+                ctx.fillStyle = '#ffffff';
+                ctx.fillText(option.text, radius - 70, 0);
                 ctx.restore();
             });
 
@@ -554,8 +626,24 @@
             setTimeout(() => roar.remove(), 1000);
         }
 
+        // Build legend
+        function buildLegend() {
+            const legendContainer = document.getElementById('legend');
+            options.forEach(option => {
+                const item = document.createElement('div');
+                item.className = 'legend-item';
+                item.innerHTML = `
+                    <div class="legend-color" style="background: ${option.color}"></div>
+                    <span class="legend-emoji">${option.emoji}</span>
+                    <span>${option.text}</span>
+                `;
+                legendContainer.appendChild(item);
+            });
+        }
+
         // Initial draw
         drawWheel();
+        buildLegend();
     </script>
 </body>
 </html>
